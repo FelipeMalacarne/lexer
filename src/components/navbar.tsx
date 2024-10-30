@@ -1,5 +1,6 @@
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
+import { PresetSelector } from "./preset-selector";
+import { presets } from "./data/presets";
 
 const Navbar = () => {
   return (
@@ -10,7 +11,7 @@ const Navbar = () => {
             <h1 className="text-lg font-semibold">Lexer</h1>
 
             <div className="ml-auto flex items-center space-x-4">
-              <Button>teste</Button>
+                <PresetSelector presets={presets} />
 
               <ThemeToggle />
             </div>
