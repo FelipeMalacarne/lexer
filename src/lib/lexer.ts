@@ -1,17 +1,14 @@
 // src/lexer/lexer.ts
 
-import { Automaton, createAutomaton, State } from './automaton';
-
-const RESERVED_WORDS = new Set(['BEGIN', 'END', 'IF', 'ELSE']);
-const SPECIAL_SYMBOLS = new Set([';', ':', ':=', '+', '-', '*', '/']);
+import { Automaton, createAutomaton, INITIAL_STATE, ERROR_STATE, State, ALPHABET } from './automaton';
 
 export class Lexer {
   private automaton: Automaton;
   private currentState: State;
   private token: string;
 
-  constructor() {
-    this.automaton = createAutomaton();
+  constructor(presetWords: string[]) {
+    this.automaton = createAutomaton(presetWords);
     this.currentState = this.automaton.initialState;
     this.token = '';
   }
@@ -22,7 +19,12 @@ export class Lexer {
   }
 
   processSymbol(symbol: string): State {
-    const nextState = this.automaton.transitions[this.currentState][symbol];
+    if (!ALPHABET.includes(symbol)) {
+      this.currentState = this.automaton.errorState;
+      return this.currentState;
+    }
+
+    const nextState = this.automaton.transitions[this.currentState]?.[symbol];
     if (nextState !== undefined) {
       this.currentState = nextState;
     } else {
@@ -40,11 +42,11 @@ export class Lexer {
     return this.currentState === this.automaton.errorState;
   }
 
-  isReserved(): boolean {
-    return RESERVED_WORDS.has(this.token.toUpperCase());
+  getCurrentState(): State {
+    return this.currentState;
   }
 
-  isSpecialSymbol(): boolean {
-    return SPECIAL_SYMBOLS.has(this.token);
+  getTransitionMatrix(): { [key: number]: Transition } {
+    return this.automaton.transitions;
   }
 }
