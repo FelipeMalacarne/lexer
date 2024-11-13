@@ -1,4 +1,4 @@
-// src/lexer/automaton.ts
+// src/models/Automaton.ts
 
 export const INITIAL_STATE = 0;
 export const ERROR_STATE = 99;
@@ -20,9 +20,11 @@ export const ALPHABET: string[] = Array.from({ length: 26 }, (_, i) =>
   String.fromCharCode(97 + i)
 );
 
-import { PRESETS } from '../lib/presets';
-
-// Função para construir o autômato baseado em um preset de palavras
+/**
+ * Cria um autômato baseado nas palavras fornecidas.
+ * @param presetWords Palavras do preset selecionado.
+ * @returns Um objeto Automaton.
+ */
 export const createAutomaton = (presetWords: string[]): Automaton => {
   let nextStateId = 1; // Reinicia a contagem para cada novo autômato
 
@@ -36,7 +38,7 @@ export const createAutomaton = (presetWords: string[]): Automaton => {
   const stateMap: { [prefix: string]: State } = {};
 
   // Construção da trie
-  presetWords.forEach(word => {
+  presetWords.forEach((word) => {
     let currentPrefix = '';
     let currentState = INITIAL_STATE;
 
