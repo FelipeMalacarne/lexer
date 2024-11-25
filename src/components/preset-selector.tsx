@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { CheckIcon, LucideChevronsDownUp } from "lucide-react";
 import { Preset } from "@/lib/presets";
+import { usePresets } from "@/providers/preset-provider";
 
 interface PresetSelectorProps extends PopoverProps {
   presets: Preset[];
@@ -27,11 +28,9 @@ interface PresetSelectorProps extends PopoverProps {
 }
 
 export function PresetSelector({
-  presets,
-  selectedPresetId,
-  onSelectPreset,
   ...props
 }: PresetSelectorProps) {
+  const { presets, selectedPresetId, setSelectedPresetId } = usePresets();
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -59,7 +58,7 @@ export function PresetSelector({
                 <CommandItem
                   key={preset.id}
                   onSelect={() => {
-                    onSelectPreset(preset.id);
+                    setSelectedPresetId(preset.id);
                     setOpen(false);
                   }}
                 >

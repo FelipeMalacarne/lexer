@@ -7,15 +7,23 @@ import { ALPHABET, INITIAL_STATE, ERROR_STATE, State } from "@/lib/automaton";
 import { Input } from "./ui/input";
 import LexerResults from "./lexer-results";
 import TransitionMatrix from "./transition-matrix";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { usePresets } from "@/providers/preset-provider";
 
-interface LexerComponentProps {
-  presetId: string;
-}
-
-const LexerComponent: React.FC<LexerComponentProps> = ({ presetId }) => {
+const LexerComponent: React.FC = () => {
+  const { selectedPresetId } = usePresets();
   const [input, setInput] = useState<string>("");
   const [results, setResults] = useState<string[]>([]);
-  const [lexer, setLexer] = useState<Lexer>(new Lexer(getPresetTokens(presetId)));
+  const [lexer, setLexer] = useState<Lexer>(
+    new Lexer(getPresetTokens(selectedPresetId))
+  );
   const [customWord, setCustomWord] = useState<string>("");
   const [transitionMatrix, setTransitionMatrix] = useState<{
     [key: number]: { [symbol: string]: number };
@@ -31,15 +39,14 @@ const LexerComponent: React.FC<LexerComponentProps> = ({ presetId }) => {
     return preset ? preset.tokens : [];
   }
 
-  // Initialize Lexer and Transition Matrix when presetId changes
   useEffect(() => {
-    const newLexer = new Lexer(getPresetTokens(presetId));
+    const newLexer = new Lexer(getPresetTokens(selectedPresetId));
     setLexer(newLexer);
     setTransitionMatrix(newLexer.getTransitionMatrix());
     setResults([]);
     setInput("");
     setCurrentState(INITIAL_STATE);
-  }, [presetId]);
+  }, [selectedPresetId]);
 
   /**
    * Handles user input changes.
@@ -89,8 +96,8 @@ const LexerComponent: React.FC<LexerComponentProps> = ({ presetId }) => {
       // Validate for lowercase letters
       addCustomWord(trimmedWord);
       setCustomWord("");
-      if (presetId === "custom-preset-id") {
-        const newLexer = new Lexer(getPresetTokens(presetId));
+      if (selectedPresetId === "custom-preset-id") {
+        const newLexer = new Lexer(getPresetTokens(selectedPresetId));
         setLexer(newLexer);
         setTransitionMatrix(newLexer.getTransitionMatrix());
         setCurrentState(INITIAL_STATE);
@@ -119,7 +126,7 @@ const LexerComponent: React.FC<LexerComponentProps> = ({ presetId }) => {
   return (
     <div className="p-4">
       {/* Adição de Palavras Personalizadas */}
-      {presetId === "custom-preset-id" && (
+      {selectedPresetId === "custom-preset-id" && (
         <div className="mb-4 flex items-center">
           <Input
             type="text"
@@ -138,14 +145,27 @@ const LexerComponent: React.FC<LexerComponentProps> = ({ presetId }) => {
       )}
 
       {/* Campo de Entrada de Tokens */}
-      <div className="grid grid-cols-2">
-        <Input
-          type="text"
-          value={input}
-          onChange={handleInputChange}
-          placeholder="Digite os tokens separados por espaço"
-          className="border p-2 w-full mb-4"
-        />
+      <div className="grid grid-cols-2 gap-4">
+            <Input
+              type="text"
+              value={input}
+              onChange={handleInputChange}
+              placeholder="Digite os tokens separados por espaço"
+              className="border p-2 w-full mb-4"
+            />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Card Title</CardTitle>
+            <CardDescription>Card Description</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p>Card Content</p>
+          </CardContent>
+          <CardFooter>
+            <p>Card Footer</p>
+          </CardFooter>
+        </Card>
       </div>
 
       {/* Resultados do Lexer */}

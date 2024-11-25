@@ -1,21 +1,10 @@
-// src/components/Navbar.tsx
-
 import React from "react";
 import { PresetSelector } from "./preset-selector";
-import { ThemeToggle } from "./theme-toggle";
-import { Preset } from "@/lib/presets";
+import { usePresets } from "@/providers/preset-provider";
 
-interface NavbarProps {
-  selectedPresetId: string;
-  onSelectPreset: (presetId: string) => void;
-  presets: Preset[];
-}
+const Navbar: React.FC = () => {
+  const { selectedPresetId, setSelectedPresetId, presets } = usePresets();
 
-const Navbar: React.FC<NavbarProps> = ({
-  selectedPresetId,
-  onSelectPreset,
-  presets,
-}) => {
   return (
     <div className="flex-col flex">
       <div className="border-b">
@@ -26,9 +15,8 @@ const Navbar: React.FC<NavbarProps> = ({
             <PresetSelector
               presets={presets}
               selectedPresetId={selectedPresetId}
-              onSelectPreset={onSelectPreset}
+              onSelectPreset={setSelectedPresetId}
             />
-            <ThemeToggle />
           </div>
         </div>
       </div>

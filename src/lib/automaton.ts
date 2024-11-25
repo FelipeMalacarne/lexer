@@ -20,31 +20,23 @@ export const ALPHABET: string[] = Array.from({ length: 26 }, (_, i) =>
   String.fromCharCode(97 + i)
 );
 
-/**
- * Cria um autômato baseado nas palavras fornecidas.
- * @param presetWords Palavras do preset selecionado.
- * @returns Um objeto Automaton.
- */
 export const createAutomaton = (presetWords: string[]): Automaton => {
-  let nextStateId = 1; // Reinicia a contagem para cada novo autômato
+  let nextStateId = 1;
 
   const transitions: { [key: number]: Transition } = {
     [INITIAL_STATE]: {},
-    [ERROR_STATE]: {}, // Estado de erro não tem transições
+    [ERROR_STATE]: {},
   };
   const finalStates = new Set<State>();
 
-  // Mapa para armazenar os estados de cada prefixo
   const stateMap: { [prefix: string]: State } = {};
 
-  // Construção da trie
   presetWords.forEach((word) => {
     let currentPrefix = '';
     let currentState = INITIAL_STATE;
 
     for (const char of word) {
       if (!ALPHABET.includes(char)) {
-        // Ignorar caracteres fora do alfabeto
         continue;
       }
       currentPrefix += char;
