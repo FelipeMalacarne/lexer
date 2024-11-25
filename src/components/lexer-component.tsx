@@ -7,8 +7,7 @@ import { ALPHABET, INITIAL_STATE, ERROR_STATE, State } from '@/lib/automaton';
 import TransitionMatrix from '@/components/transition-matrix';
 import LexerResults from '@/components/lexer-results';
 
-export 
-const LexerComponent: React.FC = () => {
+export const LexerComponent: React.FC = () => {
   const [preset, setPreset] = useState<string>('default');
   const [input, setInput] = useState<string>('');
   const [results, setResults] = useState<string[]>([]);
@@ -23,7 +22,6 @@ const LexerComponent: React.FC = () => {
     }
    };
 
-  // Inicializa o Lexer quando o preset muda
   useEffect(() => {
     const newLexer = new Lexer(PRESETS[preset]);
     setLexer(newLexer);
