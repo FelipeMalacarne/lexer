@@ -49,9 +49,6 @@ const TransitionMatrix: React.FC<TransitionMatrixProps> = ({ transitionMatrix, c
         outerRef={scrollContainerRef}
         className='bg-card w-full'
       >
-        <TableCaption className="caption-top px-4 py-2 text-left font-semibold">
-          Matriz de Transições
-        </TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className='sticky top-0 bg-card z-10 font-medium border-b px-4 py-2'>

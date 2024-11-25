@@ -1,46 +1,56 @@
 // src/components/Lexer/LexerComponent.tsx
 
-import React, { useState, useEffect } from 'react';
-import { Lexer } from '@/lib/lexer';
-import { PRESETS } from '@/lib/presets';
-import { ALPHABET, INITIAL_STATE, ERROR_STATE, State } from '@/lib/automaton';
-import TransitionMatrix from '@/components/transition-matrix';
-import LexerResults from '@/components/lexer-results';
+import React, { useState, useEffect, useRef } from "react";
+import { Lexer } from "@/lib/lexer";
+import { presets as presetData, Preset } from "@/lib/presets";
+import { ALPHABET, INITIAL_STATE, ERROR_STATE, State } from "@/lib/automaton";
+import { Input } from "./ui/input";
+import LexerResults from "./lexer-results";
+import TransitionMatrix from "./transition-matrix";
 
-export const LexerComponent: React.FC = () => {
-  const [preset, setPreset] = useState<string>('default');
-  const [input, setInput] = useState<string>('');
+interface LexerComponentProps {
+  presetId: string;
+}
+
+const LexerComponent: React.FC<LexerComponentProps> = ({ presetId }) => {
+  const [input, setInput] = useState<string>("");
   const [results, setResults] = useState<string[]>([]);
-  const [lexer, setLexer] = useState<Lexer>(new Lexer(PRESETS['default']));
-  const [customWord, setCustomWord] = useState<string>('');
-  const [transitionMatrix, setTransitionMatrix] = useState<{ [key: number]: { [symbol: string]: number } }>({});
+  const [lexer, setLexer] = useState<Lexer>(new Lexer(getPresetTokens(presetId)));
+  const [customWord, setCustomWord] = useState<string>("");
+  const [transitionMatrix, setTransitionMatrix] = useState<{
+    [key: number]: { [symbol: string]: number };
+  }>({});
   const [currentState, setCurrentState] = useState<State>(INITIAL_STATE);
 
-  const addCustomWord = (word: string): void => {
-    if (!PRESETS.custom.includes(word)) {
-        PRESETS.custom.push(word);
-    }
-   };
+  // Reference to the transition matrix scroll container
+  const transitionMatrixRef = useRef<HTMLDivElement | null>(null);
 
+  // Helper function to retrieve tokens based on preset ID
+  function getPresetTokens(id: string): string[] {
+    const preset = presetData.find((preset) => preset.id === id);
+    return preset ? preset.tokens : [];
+  }
+
+  // Initialize Lexer and Transition Matrix when presetId changes
   useEffect(() => {
-    const newLexer = new Lexer(PRESETS[preset]);
+    const newLexer = new Lexer(getPresetTokens(presetId));
     setLexer(newLexer);
     setTransitionMatrix(newLexer.getTransitionMatrix());
     setResults([]);
-    setInput('');
+    setInput("");
     setCurrentState(INITIAL_STATE);
-  }, [preset]);
+  }, [presetId]);
 
   /**
-   * Lida com a mudança na entrada do usuário.
-   * Processa os tokens e atualiza os resultados e a matriz de transições.
+   * Handles user input changes.
+   * Processes tokens and updates results and transition matrix.
    */
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setInput(value);
 
-    // Processa os tokens separados por espaço
-    const tokens = value.split(' ').filter(token => token !== '');
+    // Process tokens separated by space
+    const tokens = value.split(" ").filter((token) => token !== "");
     const newResults: string[] = [];
     lexer.reset();
 
@@ -71,56 +81,47 @@ export const LexerComponent: React.FC = () => {
   };
 
   /**
-   * Lida com a mudança de preset.
-   */
-  const handlePresetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setPreset(e.target.value);
-  };
-
-  /**
-   * Adiciona uma palavra personalizada ao preset 'custom'.
+   * Adds a custom word to the 'custom' preset.
    */
   const handleAddCustomWord = () => {
     const trimmedWord = customWord.trim().toLowerCase();
-    if (trimmedWord !== '' && /^[a-z]+$/.test(trimmedWord)) { // Validação para letras minúsculas
+    if (trimmedWord !== "" && /^[a-z]+$/.test(trimmedWord)) {
+      // Validate for lowercase letters
       addCustomWord(trimmedWord);
-      setCustomWord('');
-      if (preset === 'custom') {
-        const newLexer = new Lexer(PRESETS.custom);
+      setCustomWord("");
+      if (presetId === "custom-preset-id") {
+        const newLexer = new Lexer(getPresetTokens(presetId));
         setLexer(newLexer);
         setTransitionMatrix(newLexer.getTransitionMatrix());
         setCurrentState(INITIAL_STATE);
       }
     } else {
-      alert('Por favor, insira uma palavra válida contendo apenas letras de a a z.');
+      alert(
+        "Por favor, insira uma palavra válida contendo apenas letras de a a z."
+      );
+    }
+  };
+
+  /**
+   * Adds a custom word to the 'custom' preset.
+   */
+  const addCustomWord = (word: string): void => {
+    const customPresetIndex = presetData.findIndex(
+      (preset) => preset.id === "custom-preset-id"
+    );
+    if (customPresetIndex !== -1) {
+      presetData[customPresetIndex].tokens.push(word);
+    } else {
+      console.error("Custom preset not found!");
     }
   };
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Analisador Léxico</h2>
-      
-      {/* Seleção de Preset */}
-      <div className="mb-4 flex items-center">
-        <label htmlFor="preset" className="mr-2">Selecionar Preset:</label>
-        <select
-          id="preset"
-          value={preset}
-          onChange={handlePresetChange}
-          className="border p-2"
-        >
-          {Object.keys(PRESETS).map((key) => (
-            <option key={key} value={key}>
-              {key.charAt(0).toUpperCase() + key.slice(1)}
-            </option>
-          ))}
-        </select>
-      </div>
-      
       {/* Adição de Palavras Personalizadas */}
-      {preset === 'custom' && (
+      {presetId === "custom-preset-id" && (
         <div className="mb-4 flex items-center">
-          <input
+          <Input
             type="text"
             value={customWord}
             onChange={(e) => setCustomWord(e.target.value)}
@@ -135,19 +136,21 @@ export const LexerComponent: React.FC = () => {
           </button>
         </div>
       )}
-      
+
       {/* Campo de Entrada de Tokens */}
-      <input
-        type="text"
-        value={input}
-        onChange={handleInputChange}
-        placeholder="Digite os tokens separados por espaço"
-        className="border p-2 w-full mb-4"
-      />
-      
+      <div className="grid grid-cols-2">
+        <Input
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Digite os tokens separados por espaço"
+          className="border p-2 w-full mb-4"
+        />
+      </div>
+
       {/* Resultados do Lexer */}
       <LexerResults results={results} />
-      
+
       {/* Matriz de Transições */}
       <TransitionMatrix
         transitionMatrix={transitionMatrix}

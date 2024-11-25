@@ -1,8 +1,9 @@
-import * as React from "react"
-import { PopoverProps } from "@radix-ui/react-popover"
+// src/components/ui/preset-selector.tsx
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import { PopoverProps } from "@radix-ui/react-popover";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -10,23 +11,28 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-
-import { Preset } from "./data/presets"
-import { CheckIcon, LucideChevronsDownUp } from "lucide-react"
+} from "@/components/ui/popover";
+import { CheckIcon, LucideChevronsDownUp } from "lucide-react";
+import { Preset } from "@/lib/presets";
 
 interface PresetSelectorProps extends PopoverProps {
-  presets: Preset[]
+  presets: Preset[];
+  selectedPresetId: string;
+  onSelectPreset: (presetId: string) => void;
 }
 
-export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
-  const [open, setOpen] = React.useState(false)
-  const [selectedPreset, setSelectedPreset] = React.useState<Preset>()
+export function PresetSelector({
+  presets,
+  selectedPresetId,
+  onSelectPreset,
+  ...props
+}: PresetSelectorProps) {
+  const [open, setOpen] = React.useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen} {...props}>
@@ -38,7 +44,8 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
           aria-expanded={open}
           className="flex-1 justify-between md:max-w-[200px] lg:max-w-[300px]"
         >
-          {selectedPreset ? selectedPreset.name : "Load a preset..."}
+          {presets.find((p) => p.id === selectedPresetId)?.name ||
+            "Load a preset..."}
           <LucideChevronsDownUp className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
@@ -47,20 +54,20 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
           <CommandInput placeholder="Search presets..." />
           <CommandList>
             <CommandEmpty>No presets found.</CommandEmpty>
-            <CommandGroup heading="Examples">
+            <CommandGroup heading="Presets">
               {presets.map((preset) => (
                 <CommandItem
                   key={preset.id}
                   onSelect={() => {
-                    setSelectedPreset(preset)
-                    setOpen(false)
+                    onSelectPreset(preset.id);
+                    setOpen(false);
                   }}
                 >
                   {preset.name}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      selectedPreset?.id === preset.id
+                      selectedPresetId === preset.id
                         ? "opacity-100"
                         : "opacity-0"
                     )}
@@ -72,5 +79,5 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
         </Command>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
