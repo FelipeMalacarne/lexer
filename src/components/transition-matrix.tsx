@@ -2,6 +2,15 @@
 
 import React from 'react';
 import { ALPHABET, ERROR_STATE } from '@/lib/automaton';
+import {   
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 interface TransitionMatrixProps {
   transitionMatrix: { [key: number]: { [symbol: string]: number } };
@@ -14,37 +23,39 @@ const TransitionMatrix: React.FC<TransitionMatrixProps> = ({ transitionMatrix, c
 
   return (
     <div className="mt-8">
-      <h3 className="text-lg font-semibold mb-2">Matriz de Transições</h3>
       <div className="overflow-x-auto">
-        <table className="table-auto w-full border-collapse border border-gray-400">
-          <thead>
-            <tr>
-              <th className="px-4 py-2 border border-gray-400">Estado</th>
-              {ALPHABET.map(symbol => (
-                <th key={symbol} className="px-4 py-2 border border-gray-400">{symbol}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {sortedStates.map(state => (
-              <tr key={state} className={state === currentState ? 'bg-yellow-200' : ''}>
-                <td className="px-4 py-2 border border-gray-400">{state}</td>
+        <Table className='bg-card' >
+            <TableCaption>Matriz de transações</TableCaption>
+            <TableHeader>
+                <TableRow>
+                <TableHead className='font-medium' >Estado</TableHead>
                 {ALPHABET.map(symbol => (
-                  <td key={symbol} className="px-4 py-2 border border-gray-400 text-center">
-                    {transitionMatrix[state][symbol] !== undefined ? transitionMatrix[state][symbol] : '-'}
-                  </td>
+                    <TableHead key={symbol} >{symbol}</TableHead>
                 ))}
-              </tr>
+                </TableRow>
+            </TableHeader>
+          <TableBody>
+            {sortedStates.map(state => (
+              <TableRow key={state} className={state === currentState ? 'bg-primary/80 text-primary-foreground hover:bg-primary/90' : 'text-foreground'}>
+                <TableCell className={'font-medium'}>{state}</TableCell>
+                {ALPHABET.map(symbol => (
+                  <TableCell key={symbol} >
+                    {transitionMatrix[state][symbol] !== undefined ? transitionMatrix[state][symbol] : '-'}
+                  </TableCell>
+                ))}
+              </TableRow>
             ))}
             {/* Estado de Erro */}
-            <tr className={currentState === ERROR_STATE ? 'bg-red-200' : ''}>
-              <td className="px-4 py-2 border border-gray-400">{ERROR_STATE} (Erro)</td>
+            <TableRow className={currentState === ERROR_STATE ? 'bg-red-200' : ''}>
+              <TableCell >{ERROR_STATE} (Erro)</TableCell>
+{/* className="px-4 py-2 border border-gray-400" */}
               {ALPHABET.map(symbol => (
-                <td key={symbol} className="px-4 py-2 border border-gray-400 text-center">-</td>
+// className="px-4 py-2 border border-gray-400 text-center"
+                <TableCell key={symbol} >-</TableCell>
               ))}
-            </tr>
-          </tbody>
-        </table>
+            </TableRow>
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
