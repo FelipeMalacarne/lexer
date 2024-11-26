@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { ALPHABET, ERROR_STATE } from '@/lib/automaton';
-import {   
+import {
   Table,
   TableBody,
   TableCaption,
@@ -70,8 +70,8 @@ const TransitionMatrix: React.FC<TransitionMatrixProps> = ({ transitionMatrix, c
               key={state}
               ref={state === currentState ? currentRowRef : null}
               className={
-                state === currentState 
-                  ? 'bg-primary/80 text-primary-foreground hover:bg-primary/90' 
+                state === currentState
+                  ? 'bg-primary/80 text-primary-foreground hover:bg-primary/90'
                   : 'text-foreground'
               }
             >
