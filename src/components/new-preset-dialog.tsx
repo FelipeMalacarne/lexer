@@ -12,9 +12,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { usePresets } from "@/providers/preset-provider";
+import { useToast } from "@/hooks/use-toast";
 
 export function NewPresetDialog() {
   const { addPreset } = usePresets();
+  const { toast } = useToast()
   const [newPresetName, setNewPresetName] = useState<string>("");
   const [newPresetTokens, setNewPresetTokens] = useState<string>("");
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -27,14 +29,23 @@ export function NewPresetDialog() {
       .filter((token) => token !== "");
 
     if (name === "" || tokens.length === 0) {
-      alert("Por favor, insira um nome válido e pelo menos um token.");
+      toast({
+        title: "Invalid Preset",
+        description: "Please enter a valid name and at least one token.",
+        variant: "destructive"
+      })
       return;
     }
 
     addPreset(name, tokens);
     setNewPresetName("");
     setNewPresetTokens("");
-    setIsOpen(false); // Close the dialog
+    setIsOpen(false);
+    toast({
+      title: "New Preset Added",
+      description: `Preset ${name} added successfully.`,
+    })
+
   };
 
   return (
@@ -59,7 +70,7 @@ export function NewPresetDialog() {
               type="text"
               value={newPresetName}
               onChange={(e) => setNewPresetName(e.target.value)}
-              placeholder="Nome do Preset"
+              placeholder="Name"
               className="border p-2 mb-2 w-full col-span-3"
             />
           </div>
@@ -70,7 +81,7 @@ export function NewPresetDialog() {
               type="text"
               value={newPresetTokens}
               onChange={(e) => setNewPresetTokens(e.target.value)}
-              placeholder="Tokens (separados por vírgula)"
+              placeholder="Tokens (separated by comma)"
               className="border p-2 mb-2 w-full col-span-3"
             />
           </div>

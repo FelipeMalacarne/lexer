@@ -3,6 +3,7 @@ import { ThemeProvider } from "./providers/theme-provider";
 import { PresetsProvider } from "./providers/preset-provider";
 import Navbar from "./components/navbar";
 import LexerComponent from "./components/lexer-component";
+import { Toaster } from "./components/ui/toaster";
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
             <LexerComponent />
           </div>
         </div>
+        <Toaster />
       </PresetsProvider>
     </ThemeProvider>
   );
