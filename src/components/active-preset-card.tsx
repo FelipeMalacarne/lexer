@@ -9,7 +9,7 @@ import {
 } from "./ui/card";
 import { ScrollArea } from "./ui/scroll-area";
 import { Separator } from "./ui/separator";
-import { Button } from "./ui/button";
+import { NewPresetDialog } from "./new-preset-dialog";
 
 export function ActivePresetCard() {
   const { selectedPreset } = usePresets();
@@ -21,7 +21,6 @@ export function ActivePresetCard() {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-60">
-            {/* <h4 className="mb-4 text-sm font-medium leading-none">Tokens</h4> */}
             {selectedPreset.tokens.map((token) => (
               <>
                 <div key={token} className="text-sm">
@@ -34,9 +33,7 @@ export function ActivePresetCard() {
 
       </CardContent>
       <CardFooter>
-      <Button>
-        Add Custom Preset
-      </Button>
+        <NewPresetDialog/>
       </CardFooter>
     </Card>
   );

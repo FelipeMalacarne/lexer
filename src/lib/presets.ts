@@ -55,9 +55,4 @@ export const presets: Preset[] = [
     name: "Chat",
     tokens: ['converse', 'communicate', 'discuss'],
   },
-  {
-    id: "custom-preset-id", // Unique ID for custom preset
-    name: "Custom",
-    tokens: [], // Initially empty, allows adding custom words
-  },
 ];
