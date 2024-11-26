@@ -18,19 +18,12 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { CheckIcon, LucideChevronsDownUp } from "lucide-react";
-import { Preset } from "@/lib/presets";
 import { usePresets } from "@/providers/preset-provider";
-
-interface PresetSelectorProps extends PopoverProps {
-  presets: Preset[];
-  selectedPresetId: string;
-  onSelectPreset: (presetId: string) => void;
-}
 
 export function PresetSelector({
   ...props
-}: PresetSelectorProps) {
-  const { presets, selectedPresetId, setSelectedPresetId } = usePresets();
+}) {
+  const { presets, selectedPreset, setSelectedPreset } = usePresets();
   const [open, setOpen] = React.useState(false);
 
   return (
@@ -43,7 +36,7 @@ export function PresetSelector({
           aria-expanded={open}
           className="flex-1 justify-between md:max-w-[200px] lg:max-w-[300px]"
         >
-          {presets.find((p) => p.id === selectedPresetId)?.name ||
+          {presets.find((p) => p.id === selectedPreset.id)?.name ??
             "Load a preset..."}
           <LucideChevronsDownUp className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -58,7 +51,7 @@ export function PresetSelector({
                 <CommandItem
                   key={preset.id}
                   onSelect={() => {
-                    setSelectedPresetId(preset.id);
+                    setSelectedPreset(preset);
                     setOpen(false);
                   }}
                 >
@@ -66,7 +59,7 @@ export function PresetSelector({
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      selectedPresetId === preset.id
+                      selectedPreset === preset
                         ? "opacity-100"
                         : "opacity-0"
                     )}

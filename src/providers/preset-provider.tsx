@@ -2,8 +2,8 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Preset, presets as presetData } from "@/lib/presets"; // Adjust the import path as necessary
 
 interface PresetsContextType {
-  selectedPresetId: string;
-  setSelectedPresetId: (id: string) => void;
+  selectedPreset: Preset;
+  setSelectedPreset: (id: Preset) => void;
   presets: Preset[];
 }
 
@@ -22,12 +22,12 @@ interface PresetsProviderProps {
 }
 
 export const PresetsProvider: React.FC<PresetsProviderProps> = ({ children }) => {
-  const [selectedPresetId, setSelectedPresetId] = useState<string>(
-    presetData[0]?.id || ""
+  const [selectedPreset, setSelectedPreset] = useState<Preset>(
+    presetData[0]
   );
 
   return (
-    <PresetsContext.Provider value={{ selectedPresetId, setSelectedPresetId, presets: presetData }}>
+    <PresetsContext.Provider value={{ selectedPreset, setSelectedPreset, presets: presetData }}>
       {children}
     </PresetsContext.Provider>
   );
