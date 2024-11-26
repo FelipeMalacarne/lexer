@@ -1,4 +1,4 @@
-import { Automaton, createAutomaton, INITIAL_STATE, ERROR_STATE, State, ALPHABET } from '@/lib/automaton';
+import { Automaton, createAutomaton, State, ALPHABET } from "@/lib/automaton";
 
 export class Lexer {
   private automaton: Automaton;
@@ -8,12 +8,12 @@ export class Lexer {
   constructor(presetWords: string[]) {
     this.automaton = createAutomaton(presetWords);
     this.currentState = this.automaton.initialState;
-    this.token = '';
+    this.token = "";
   }
 
   reset() {
     this.currentState = this.automaton.initialState;
-    this.token = '';
+    this.token = "";
   }
 
   processSymbol(symbol: string): State {

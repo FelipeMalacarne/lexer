@@ -1,5 +1,3 @@
-// src/components/Lexer/LexerComponent.tsx
-
 import React, { useState, useEffect } from "react";
 import { Lexer } from "@/lib/lexer";
 import { INITIAL_STATE, State } from "@/lib/automaton";
@@ -8,11 +6,6 @@ import LexerResults from "./lexer-results";
 import TransitionMatrix from "./transition-matrix";
 import {
   Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
 } from "./ui/card";
 import { usePresets } from "@/providers/preset-provider";
 import { ActivePresetCard } from "./active-preset-card";

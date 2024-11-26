@@ -7,7 +7,6 @@ interface LexerResultsProps {
 }
 
 const LexerResults: React.FC<LexerResultsProps> = ({ results }) => {
-  console.log(results);
   return (
     <ScrollArea className="h-full max-h-screen overflow-y-auto">
       {results.map((result, index) => (

@@ -5,8 +5,8 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { Preset, presets as presetData } from "@/lib/presets"; // Adjust the import path as necessary
-import { v4 as uuidv4 } from "uuid"; // Install uuid using: npm install uuid
+import { Preset, presets as presetData } from "@/lib/presets";
+import { v4 as uuidv4 } from "uuid";
 
 interface PresetsContextType {
   selectedPreset: Preset;

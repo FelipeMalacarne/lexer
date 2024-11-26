@@ -1,7 +1,4 @@
-// src/components/ui/preset-selector.tsx
-
 import * as React from "react";
-import { PopoverProps } from "@radix-ui/react-popover";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,9 +17,7 @@ import {
 import { CheckIcon, LucideChevronsDownUp } from "lucide-react";
 import { usePresets } from "@/providers/preset-provider";
 
-export function PresetSelector({
-  ...props
-}) {
+export function PresetSelector({ ...props }) {
   const { presets, selectedPreset, setSelectedPreset } = usePresets();
   const [open, setOpen] = React.useState(false);
 
@@ -59,9 +54,7 @@ export function PresetSelector({
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      selectedPreset === preset
-                        ? "opacity-100"
-                        : "opacity-0"
+                      selectedPreset === preset ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
